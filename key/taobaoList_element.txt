@@ -1,0 +1,10 @@
+aucNumId
+amount
+rate
+rateId
+content
+buyAmount
+date
+dayAfterConfirm
+photos
+reply

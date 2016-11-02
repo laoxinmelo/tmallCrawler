@@ -1,0 +1,1 @@
+productID	commentID	content	appendDate	dayNum	photosNum	reply	
