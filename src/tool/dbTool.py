@@ -70,6 +70,7 @@ class DBPool:
         :param sql:
         :return:
         """
+
         try:
             self.cur.execute(sql);
             self.conn.commit()
