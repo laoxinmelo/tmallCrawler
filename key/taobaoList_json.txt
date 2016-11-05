@@ -1,6 +1,0 @@
-bidPriceMoney	amount
-user	nick
-user	vipLevel
-user	anony
-auction	title
-auction	sku

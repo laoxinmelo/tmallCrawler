@@ -1,7 +1,7 @@
 #coding=utf-8
 
 import requests
-
+import traceback
 
 def getHttpResponse(url,headers,proxies,timeout):
     """
@@ -14,5 +14,6 @@ def getHttpResponse(url,headers,proxies,timeout):
     """
     try:
         return requests.get(url=url,headers=headers,proxies=proxies,timeout=timeout);
-    except(requests.exceptions.ReadTimeout,requests.exceptions.SSLError,requests.exceptions.ConnectTimeout):
+    except(requests.exceptions.ReadTimeout,requests.exceptions.SSLError,requests.exceptions.ConnectTimeout,requests.exceptions.ConnectionError):
+        # print traceback.format_exc()
         return None;
