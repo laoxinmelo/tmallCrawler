@@ -3,11 +3,13 @@
 from userAgentTool import *
 from requestTool import *
 from proxyTool import *
+from resolveTool import *
+
 import time
 import json
 
 class ItemCrawler:
-    def __init__(self,itemId,sellerId):
+    def __init__(self,itemId,sellerId,dbTool):
         """
         对象初始化
         :param itemId:
@@ -16,7 +18,7 @@ class ItemCrawler:
         """
         self.itemId = itemId
         self.sellerId = sellerId
-        self.jsonList = []
+        self.dbTool = dbTool
 
     def getHeaders(self):
         """
@@ -81,11 +83,11 @@ class ItemCrawler:
                     pageNum = pageNum - 1
                     count += 1
                 elif isinstance(js["rateDetail"]["paginator"],dict):
-                    totalNum = js["rateDetail"]["paginator"]["lastPage"]
+                    totalNum = int(js["rateDetail"]["paginator"]["lastPage"])
                     # print threadNum,count,content
                     count = 1
-                    print content
-                    self.jsonList.append(js)
+                    jsonResolve(self.dbTool,js,self.itemId)
+                    print "ThreadID:%d; PageNum:%d; TotalPageNum:%d; ItemId:%s" % (threadNum,pageNum,totalNum,self.itemId)
             else:
                 pageNum = pageNum - 1
                 count += 1

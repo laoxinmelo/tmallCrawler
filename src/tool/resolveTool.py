@@ -1,6 +1,6 @@
 #coding=utf-8
 
-def jsonResolve(dbTool,jsonList,itemId):
+def jsonResolve(dbTool,jsonObject,itemId):
     """
     对json进行解析并入库
     :param dbTool:
@@ -8,15 +8,16 @@ def jsonResolve(dbTool,jsonList,itemId):
     :return:
     """
 
-    if len(jsonList) == 0:
-        return ;
+    rateList = jsonObject["rateDetail"]["rateList"]
 
-    for js in jsonList:
-        rateList = js["rateDetail"]["rateList"]
+    if len(rateList) == 0:
+         return ;
 
-        if len(rateList) == 0:
-            continue
+    commentSql = "insert into review values";
+    appendSql = "insert into appendreview values";
+    replySql = "insert into reply values";
 
+    for js in rateList:
         #解析消费者的初始评论
         userName = js["displayUserNick"]  #评论者名称
         userTmallLevel = js["tamllSweetLevel"]  #评论者天猫商城等级
@@ -27,4 +28,44 @@ def jsonResolve(dbTool,jsonList,itemId):
         date = js["rateDate"]  #评论日期
         reviewId = js["id"]   #评论ID
 
-        #
+        commentValue = "(\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",\"%s\",%d)," % (itemId,reviewId,userName,userTmallLevel,userVipLevel,content,date,picNum);
+        commentSql += commentValue
+
+        #解析消费者所受到的商家反馈
+        reply = js["reply"]
+        if reply != "":
+            replyValue = "(\"%s\",\"%s\",\"%s\")," % (itemId,reviewId,reply);
+            replySql += replyValue
+
+        #解析消费者的追加评论
+        append = js["appendComment"]
+        if append != "":
+            appendDate = append["commentTime"]
+            content = append["content"]
+            appendPicNum = len(append["pics"])
+            appendDays = append["days"]
+
+            appendValue = "(\"%s\",\"%s\",\"%s\",\"%s\",%d,%d)" % (itemId,reviewId,content,appendDate,appendDays,appendPicNum)
+            appendSql += appendValue + ","
+
+            appendReply = append["reply"]
+            if appendReply != "":
+                replyValue = "(\"%s\",\"%s\",\"%s\")," % (itemId,reviewId,appendReply);
+                replySql += replyValue
+
+
+    #初始评论
+    if not commentSql.endswith("values"):
+        commentSql = commentSql[:-1]
+        dbTool.insert(commentSql)
+
+    #追加评论
+    if not appendSql.endswith("values"):
+        appendSql = appendSql[:-1]
+        dbTool.insert(appendSql)
+
+    #商家反馈
+    if not replySql.endswith("values"):
+        replySql = replySql[:-1]
+        dbTool.insert(replySql)
+

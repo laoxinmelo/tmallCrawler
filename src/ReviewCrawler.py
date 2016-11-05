@@ -16,7 +16,7 @@ def getItemQueue():
     从数据库中获取所有商品id的信息
     :return:
     """
-    itemSet = dbTool.select("select itemId,sellerId from product where itemId=\"537202644580\"");
+    itemSet = dbTool.select("select itemId,sellerId from product");
     for item in itemSet:
         itemQueue.put((item[0],item[1]))
 
@@ -33,21 +33,20 @@ class crawleThread(threading.Thread):
             item = self.itemQueue.get()
             itemId = item[0]
             sellerId = item[1]
-            crawler = ItemCrawler(itemId,sellerId)
+            crawler = ItemCrawler(itemId,sellerId,self.db)
             crawler.crawle(self.threadID)
 
-            jsonResolve(self.db,crawler.jsonList,itemId)
-            print self.itemQueue.qsize()
+            # print "There are " + str(self.itemQueue.qsize()) + " items left..."
 
 if __name__ == "__main__":
 
      getItemQueue()
 
      threadList = []
-     for i in range(10):
+     for i in range(5):
          newThread = crawleThread(i+1)
          threadList.append(newThread)
 
-     for i in range(10):
+     for i in range(5):
         threadList[i].start()
 
