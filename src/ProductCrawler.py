@@ -16,7 +16,23 @@ def strEscape(word):
     return urllib.quote(word)
 
 
-def
+class MyHTMLParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.content = ""
+
+    def handle_startendtag(self, tag, attrs):
+        """
+
+        :param tag:
+        :param attrs:元组形式，表示标签及对应的值
+        :return:
+        """
+        if tag == "a":
+            pass
+
+    def handle_data(self, data):
+        print data
 
 
 #数据库连接池
@@ -26,5 +42,9 @@ if __name__ == "__main__":
       url = "https://list.tmall.com/search_product.htm?q=%s&type=p&vmarket=&from=mallfp..pc_1_searchbutton" % strEscape("电子烟")
       req = getHttpResponse(url=url,headers=None,proxies=None,timeout=1)
 
+      myHTMLParser = MyHTMLParser()
+
       if req != None:
-           print req.text
+           content = req.text
+           # print content
+           myHTMLParser.feed(content)

@@ -1,8 +1,8 @@
 #coding=utf-8
 
 import MySQLdb
+import traceback
 from DBUtils.PooledDB import *
-
 
 host = "localhost"
 user = "root"
@@ -22,7 +22,7 @@ class DBPool:
         :return:
         """
         self.pool = PooledDB(MySQLdb,host=host,user=user,passwd=passwd,db=dbName,port=port,
-                             mincached=mincached,maxcached=maxcached,maxconnections=maxconnections,blocking=blocking)
+                             mincached=mincached,maxcached=maxcached,maxconnections=maxconnections,blocking=blocking,charset="utf8")
 
         self.conn = self.pool.connection()
         self.cur = self.conn.cursor()
@@ -61,6 +61,7 @@ class DBPool:
             self.cur.execute(sql);
             self.conn.commit()
         except Exception as msg:
+            print sql
             print msg
 
 
