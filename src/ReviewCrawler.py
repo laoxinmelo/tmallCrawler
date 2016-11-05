@@ -11,7 +11,7 @@ dbTool = DBPool()
 
 itemQueue = Queue.Queue()
 
-def getItemDict():
+def getItemQueue():
     """
     从数据库中获取所有商品id的信息
     :return:
@@ -41,7 +41,7 @@ class crawleThread(threading.Thread):
 
 if __name__ == "__main__":
 
-     getItemDict()
+     getItemQueue()
 
      threadList = []
      for i in range(10):
