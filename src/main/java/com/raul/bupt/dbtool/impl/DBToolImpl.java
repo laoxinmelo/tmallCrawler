@@ -12,7 +12,7 @@ public class DBToolImpl implements DBTool{
     // 驱动程序名
     private final String driver = "com.mysql.jdbc.Driver";
     // URL指向要访问的数据库名scutcs
-    private final String url = "jdbc:mysql://127.0.0.1:3306/tmall";
+    private final String url = "jdbc:mysql://127.0.0.1:3306/tmall?characterEncoding=utf-8";   //考虑中文编码问题
     // MySQL配置时的用户名
     private final String user = "root";
     // MySQL配置时的密码

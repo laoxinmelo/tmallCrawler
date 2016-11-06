@@ -29,6 +29,7 @@ public class CrawleTest {
                     product.getProductId(),product.getProductName(),product.getSellerId(),product.getSellerName(),
                     product.getPrice(),product.getTradeNum());
 
+            System.out.println(sql);
             dbTool.execute(sql);
         }
     }
