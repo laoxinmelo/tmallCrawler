@@ -93,7 +93,7 @@ class ItemCrawler:
                         break
 
                     jsonResolve(self.dbTool,js,self.itemId)
-                    # print "ThreadID:%d; PageNum:%d; TotalPageNum:%d; ItemId:%s; TryTimes:%s" % (threadNum,pageNum,totalNum,self.itemId,count)
+                    # print "ThreadID:%d; PageNum:%d; TotalPageNum:%d; ItemId:%s; TryTimes:%s" % (threadNum,pageNum,totalNum,self.itemId,count),content
                     count = 1
             else:
                 pageNum = pageNum - 1
