@@ -13,7 +13,7 @@ port = 3306
 mincached = 10
 maxcached = 30
 maxconnections = 20
-blocking = True
+blocking = False
 
 class DBPool:
     def __init__(self):
@@ -24,32 +24,49 @@ class DBPool:
         self.pool = PooledDB(MySQLdb,host=host,user=user,passwd=passwd,db=dbName,port=port,
                              mincached=mincached,maxcached=maxcached,maxconnections=maxconnections,blocking=blocking,charset="utf8")
 
-        self.conn = self.pool.connection()
-        self.cur = self.conn.cursor()
+
+    def getConn(self):
+        return self.pool.connection();
+
 
     def select(self,sql):
+
         """
         数据查询
         :param sql:
         :return:
         """
+        conn = self.getConn()
+        cur = self.getConn().cursor()
+
         try:
-            self.cur.execute(sql);
-            return self.cur.fetchall();
+            cur.execute(sql);
+            return cur.fetchall();
         except Exception as msg:
             print msg
+        finally:
+            conn.close()
+            cur.close()
 
     def update(self,sql):
+
         """
         数据更新
         :param sql:
         :return:
         """
+        conn = self.getConn()
+        cur = self.conn.cursor()
+
         try:
-            self.cur.execute(sql);
-            self.conn.commit()
+            cur.execute(sql);
+            conn.commit()
         except Exception as msg:
             print msg
+        finally:
+            conn.close()
+            cur.close()
+
 
     def insert(self,sql):
         """
@@ -57,12 +74,18 @@ class DBPool:
         :param sql:
         :return:
         """
+        conn = self.getConn()
+        cur = self.getConn().cursor()
+
         try:
-            self.cur.execute(sql);
-            self.conn.commit()
+            cur.execute(sql);
+            conn.commit()
         except Exception as msg:
             print sql
             print msg
+        finally:
+            conn.close()
+            cur.close()
 
 
     def delete(self,sql):
@@ -71,17 +94,14 @@ class DBPool:
         :param sql:
         :return:
         """
+        conn = self.getConn()
+        cur = self.getConn().cursor()
 
         try:
-            self.cur.execute(sql);
-            self.conn.commit()
+            cur.execute(sql);
+            conn.commit()
         except Exception as msg:
             print msg
-
-    def close(self):
-        """
-        关闭连接池的连接
-        :return:
-        """
-        self.conn.close()
-        self.cur.close()
+        finally:
+            conn.close()
+            cur.close()

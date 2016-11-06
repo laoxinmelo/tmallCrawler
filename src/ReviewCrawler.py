@@ -43,10 +43,10 @@ if __name__ == "__main__":
      getItemQueue()
 
      threadList = []
-     for i in range(5):
+     for i in range(3):
          newThread = crawleThread(i+1)
          threadList.append(newThread)
 
-     for i in range(5):
+     for i in range(3):
         threadList[i].start()
 

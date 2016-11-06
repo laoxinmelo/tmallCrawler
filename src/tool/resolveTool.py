@@ -28,14 +28,14 @@ def jsonResolve(dbTool,jsonObject,itemId):
         date = js["rateDate"]  #评论日期
         reviewId = js["id"]   #评论ID
 
-        commentValue = "(\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",\"%s\",%d)," % (itemId,reviewId,userName,userTmallLevel,userVipLevel,content,date,picNum);
-        commentSql += commentValue
+        commentValue = "(\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",\"%s\",%d);" % (itemId,reviewId,userName,userTmallLevel,userVipLevel,content,date,picNum);
+        dbTool.insert(commentSql + commentValue)
 
         #解析消费者所受到的商家反馈
         reply = js["reply"]
         if reply != "":
-            replyValue = "(\"%s\",\"%s\",\"%s\")," % (itemId,reviewId,reply);
-            replySql += replyValue
+            replyValue = "(\"%s\",\"%s\",\"%s\");" % (itemId,reviewId,reply);
+            dbTool.insert(replySql + replyValue)
 
         #解析消费者的追加评论
         append = js["appendComment"]
@@ -45,27 +45,10 @@ def jsonResolve(dbTool,jsonObject,itemId):
             appendPicNum = len(append["pics"])
             appendDays = append["days"]
 
-            appendValue = "(\"%s\",\"%s\",\"%s\",\"%s\",%d,%d)" % (itemId,reviewId,content,appendDate,appendDays,appendPicNum)
-            appendSql += appendValue + ","
+            appendValue = "(\"%s\",\"%s\",\"%s\",\"%s\",%d,%d);" % (itemId,reviewId,content,appendDate,appendDays,appendPicNum)
+            dbTool.insert(appendSql + appendValue)
 
             appendReply = append["reply"]
             if appendReply != "":
-                replyValue = "(\"%s\",\"%s\",\"%s\")," % (itemId,reviewId,appendReply);
-                replySql += replyValue
-
-
-    #初始评论
-    if not commentSql.endswith("values"):
-        commentSql = commentSql[:-1]
-        dbTool.insert(commentSql)
-
-    #追加评论
-    if not appendSql.endswith("values"):
-        appendSql = appendSql[:-1]
-        dbTool.insert(appendSql)
-
-    #商家反馈
-    if not replySql.endswith("values"):
-        replySql = replySql[:-1]
-        dbTool.insert(replySql)
-
+                replyValue = "(\"%s\",\"%s\",\"%s\");" % (itemId,reviewId,appendReply);
+                dbTool.insert(replySql + replyValue)
