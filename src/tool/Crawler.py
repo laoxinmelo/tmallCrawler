@@ -27,7 +27,7 @@ class ItemCrawler:
         """
         Headers = {}
         Headers["Accept"] = "*/*"
-        Headers["Accept-Encoding"] = "gzip, deflate, sdch, br"
+        Headers["Accept-Encoding"] = "gzip"
         Headers["Accept-Language"] = "zh-CN,zh;q=0.8"
         Headers["cookie"] = self.getCookie()
         Headers["User-Agent"] = getUserAgent()
@@ -46,7 +46,8 @@ class ItemCrawler:
         appKey = "12574478"
         queryString = "api="+api+"&v="+v+"&appKey="+appKey
 
-        proxies = reflushProxy()
+        proxy = reflushProxy()
+        proxies = {"https" : "https://" + proxy}
 
         try:
                  r = getHttpResponse(url+queryString,{},proxies,5)
@@ -72,7 +73,11 @@ class ItemCrawler:
               +"&sellerId=" + self.sellerId + "&order=3&currentPage=" + str(pageNum) + "&append=0&content=1&tagId=&posi=&picture=&needFold=0&_ksTS=" + t + "_1819&callback=jsonp1820"
 
             Headers = self.getHeaders()
-            req = getHttpResponse(url,Headers,{},1)
+
+            proxy = reflushProxy()
+            proxies = {"http" : "http://" + proxy}
+
+            req = getHttpResponse(url,Headers,proxies,5)
             count = 1
             if req != None:
                 content = req.text.strip("\r\n")
@@ -84,10 +89,12 @@ class ItemCrawler:
                     count += 1
                 elif isinstance(js["rateDetail"]["paginator"],dict):
                     totalNum = int(js["rateDetail"]["paginator"]["lastPage"])
-                    # print threadNum,count,content
-                    count = 1
+                    if totalNum == 0:
+                        break
+
                     jsonResolve(self.dbTool,js,self.itemId)
-                    print "ThreadID:%d; PageNum:%d; TotalPageNum:%d; ItemId:%s" % (threadNum,pageNum,totalNum,self.itemId)
+                    # print "ThreadID:%d; PageNum:%d; TotalPageNum:%d; ItemId:%s; TryTimes:%s" % (threadNum,pageNum,totalNum,self.itemId,count)
+                    count = 1
             else:
                 pageNum = pageNum - 1
                 count += 1

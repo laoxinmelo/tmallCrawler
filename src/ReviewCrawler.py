@@ -2,7 +2,6 @@
 
 from tool.dbTool import *
 from tool.Crawler import *
-from tool.resolveTool import *
 import Queue
 import threading
 
@@ -36,17 +35,17 @@ class crawleThread(threading.Thread):
             crawler = ItemCrawler(itemId,sellerId,self.db)
             crawler.crawle(self.threadID)
 
-            # print "There are " + str(self.itemQueue.qsize()) + " items left..."
+            print "There are " + str(self.itemQueue.qsize()) + " items left..."
 
 if __name__ == "__main__":
 
      getItemQueue()
 
      threadList = []
-     for i in range(3):
+     for i in range(10):
          newThread = crawleThread(i+1)
          threadList.append(newThread)
 
-     for i in range(3):
+     for i in range(10):
         threadList[i].start()
 

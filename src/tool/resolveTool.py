@@ -25,6 +25,7 @@ def jsonResolve(dbTool,jsonObject,itemId):
 
         picNum = len(js["pics"])   #评论中图片数量
         content = js["rateContent"]   #评论内容
+        content = content.replace("<b>","").replace("</b>","")
         date = js["rateDate"]  #评论日期
         reviewId = js["id"]   #评论ID
 
@@ -32,7 +33,7 @@ def jsonResolve(dbTool,jsonObject,itemId):
         dbTool.insert(commentSql + commentValue)
 
         #解析消费者所受到的商家反馈
-        reply = js["reply"]
+        reply = js["reply"].replace("<b>","").replace("</b>","")
         if reply != "":
             replyValue = "(\"%s\",\"%s\",\"%s\");" % (itemId,reviewId,reply);
             dbTool.insert(replySql + replyValue)
@@ -41,11 +42,11 @@ def jsonResolve(dbTool,jsonObject,itemId):
         append = js["appendComment"]
         if append != "":
             appendDate = append["commentTime"]
-            content = append["content"]
+            appendContent = append["content"].replace("<b>","").replace("</b>","")
             appendPicNum = len(append["pics"])
             appendDays = append["days"]
 
-            appendValue = "(\"%s\",\"%s\",\"%s\",\"%s\",%d,%d);" % (itemId,reviewId,content,appendDate,appendDays,appendPicNum)
+            appendValue = "(\"%s\",\"%s\",\"%s\",\"%s\",%d,%d);" % (itemId,reviewId,appendContent,appendDate,appendDays,appendPicNum)
             dbTool.insert(appendSql + appendValue)
 
             appendReply = append["reply"]
