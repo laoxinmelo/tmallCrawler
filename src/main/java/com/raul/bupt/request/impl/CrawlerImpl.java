@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class CrawlerImpl implements Crawler{
 
-    private final String itemIndex = "product item";
+    private final String itemIndex = "product  ";//"product item";
     private final String idIndex = "data-id";
     private final String priceIndex = "productPrice";
     private final String tradeIndex = "productStatus";
@@ -65,6 +65,7 @@ public class CrawlerImpl implements Crawler{
         if(doc == null) {
             throw new NullPointerException("The Url Document is NULL....");
         }
+
 
        ArrayList itemList = new ArrayList<Product>();  //用来保存当前页面下各个商品的对应信息，如名称，价格，销量，卖家信息等
 
